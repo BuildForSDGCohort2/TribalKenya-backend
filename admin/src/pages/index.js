@@ -6,7 +6,7 @@ import Login from '../components/admin-login/Login';
 
 const IndexPage = () => (
   <Layout>
-    <SEO title="Home" />
+    <SEO title="Login" />
     <Login />
   </Layout>
 );

@@ -1,10 +1,14 @@
 {
   "name": "gatsby-starter-default",
   "private": true,
-  "description": "A simple starter to get up and developing quickly with Gatsby",
+  "description": "Admin section for TribalKenya Web App",
   "version": "0.1.0",
-  "author": "Kyle Mathews <mathews.kyle@gmail.com>",
+  "author": "Abdiwadud Haji <abdiwadudhaji@gmail.com>",
   "dependencies": {
+    "@firebase/app": "^0.6.11",
+    "@firebase/auth": "^0.14.9",
+    "@firebase/firestore": "^1.16.7",
+    "animate.css": "^4.1.1",
     "bootstrap": "^4.5.2",
     "gatsby": "^2.24.54",
     "gatsby-image": "^2.4.17",
