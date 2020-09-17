@@ -1,3 +1,4 @@
+/* eslint-disable max-statements */
 import React, { useReducer, createContext, useContext } from 'react';
 import { storageRef } from '../firebase';
 import { AuthContext } from '../admin-login/Auth.context';
@@ -40,7 +41,7 @@ const HomeProvider = ({ children }) => {
       const headers = new Headers();
       headers.append('Content-Type', 'application/json');
       const options = {
-        method: 'Post',
+        method: 'POST',
         headers,
         body: JSON.stringify(category)
       };
@@ -48,7 +49,7 @@ const HomeProvider = ({ children }) => {
       // Create request
       const request = new Request(`https://us-central1-tribalkenya-ff470.cloudfunctions.net/app/api/categories/add/${email}`, options);
       await fetch(request);
-      alertMessage('succes');
+      alertMessage('success');
     } catch (error) {
       alertMessage('error', error.message);
     }
@@ -72,6 +73,60 @@ const HomeProvider = ({ children }) => {
       const results = await response.json();
       dispatch({ type: 'fetch_categories', categories: results });
     } catch (error) {
+      console.log(error.message);
+    }
+  };
+
+  // Function for updating a category
+  const updateCategory = async (category) => {
+    try {
+      const headers = new Headers();
+      headers.append('Content-Type', 'application/json');
+      const options = {
+        method: 'PUT',
+        headers,
+        body: JSON.stringify(category)
+      };
+      const request = new Request(`https://us-central1-tribalkenya-ff470.cloudfunctions.net/app/api/category/update/${category.id}`, options);
+      await fetch(request);
+      alertMessage('success');
+    } catch (error) {
+      alertMessage('error', error.message);
+    }
+  };
+
+  // Function for updating a category in the state while waiting update response from API
+  const updateCategoryInState = (category) => {
+    const newState = [...state.categories];
+    newState.forEach((key) => {
+      if (key.id === category.id) {
+        newState.splice(newState.indexOf(key), 1, category);
+      }
+    });
+    dispatch({ type: 'fetch_categories', categories: newState });
+  };
+
+  // Function fo deleting a category
+  const deleteCategory = async (category) => {
+    try {
+      const newState = [...state.categories];
+      newState.forEach((key) => {
+        if (key.id === category.id) {
+          newState.splice(newState.indexOf(key), 1);
+        }
+      });
+      dispatch({ type: 'fetch_categories', categories: newState });
+      const headers = new Headers();
+      headers.append('Content-Type', 'application/json');
+      const options = {
+        method: 'DELETE',
+        headers
+      };
+      const request = new Request(`https://us-central1-tribalkenya-ff470.cloudfunctions.net/app/api/categories/delete/${category.id}`, options);
+      await fetch(request);
+      console.log(category.id);
+      alertMessage('success');
+    } catch (error) {
       alertMessage('error', error.message);
     }
   };
@@ -82,6 +137,9 @@ const HomeProvider = ({ children }) => {
         addCategory,
         addImageToStorage,
         getListOfCategories,
+        updateCategory,
+        updateCategoryInState,
+        deleteCategory,
         dispatch
       }}>
           {children}

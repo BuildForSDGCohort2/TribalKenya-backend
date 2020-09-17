@@ -61,7 +61,7 @@ const AuthProvider = ({ children }) => {
     }
   };
 
-  const alertMessage = (type, error = null) => {
+  const alertMessage = (type, error = '') => {
     if (type === 'success') {
       dispatch({ type: 'message', message: 'Success', success: true });
     } else {

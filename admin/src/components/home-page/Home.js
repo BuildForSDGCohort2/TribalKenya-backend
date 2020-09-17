@@ -6,9 +6,8 @@ import Category from './Category';
 import './home.css';
 
 const Home = () => {
-  const { categoryForm, dispatch, addCategory, addImageToStorage, categories, getListOfCategories } = useContext(HomeContext);
-  const toggleForm = (ev) => {
-    ev.preventDefault();
+  const { categoryForm, dispatch, categories, getListOfCategories } = useContext(HomeContext);
+  const toggleForm = () => {
     dispatch({
       type: 'show_category_form',
       categoryForm: !categoryForm
@@ -27,7 +26,7 @@ const Home = () => {
         {categoryForm ? 'Cancel' : 'Add Category'}
       </Button>
       {categoryForm ? (
-          <AddCategoriesForm categoryForm={categoryForm} addCategory={addCategory} addImage={addImageToStorage} toggleForm={toggleForm} />
+          <AddCategoriesForm />
       ) : null}
     </div>
     <div className="container-fluid white-bg curved-border p-2 mt-2 custom-card-group">
