@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import {
   Fade,
   Form,
@@ -9,14 +9,17 @@ import {
   FormText,
   Button
 } from 'reactstrap';
+import { HomeContext } from './Home.context';
 
-const AddCategoriesForm = ({ categoryForm, addCategory, addImage, toggleForm }) => {
+const AddCategoriesForm = () => {
   const [name, setname] = useState('');
   const [poster, setposter] = useState();
+  const { addCategory, dispatch, addImageToStorage, categoryForm, getListOfCategories } = useContext(HomeContext);
   const setUpCategory = async (posterFile) => {
     try {
-      const posterUrl = await addImage('categories', posterFile);
-      addCategory({ name: name, poster: posterUrl });
+      const posterUrl = await addImageToStorage('categories', posterFile);
+      await addCategory({ name: name, poster: posterUrl });
+      await getListOfCategories();
     } catch (error) {
       console.log(error.message);
     }
@@ -26,7 +29,10 @@ const AddCategoriesForm = ({ categoryForm, addCategory, addImage, toggleForm }) 
     if (poster && name !== '') {
       setUpCategory(poster.files[0]);
       ev.target.reset();
-      toggleForm();
+      dispatch({
+        type: 'show_category_form',
+        categoryForm: !categoryForm
+      });
     }
   };
   return (
@@ -53,7 +59,7 @@ const AddCategoriesForm = ({ categoryForm, addCategory, addImage, toggleForm }) 
             </FormText>
           </Col>
         </FormGroup>
-        <Button type="submit" className="black-bg no-outline" onClick={handleSubmit} >
+        <Button type="submit" className="black-bg no-outline" >
           Submit
         </Button>
       </Form>

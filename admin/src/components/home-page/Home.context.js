@@ -48,7 +48,7 @@ const HomeProvider = ({ children }) => {
       // Create request
       const request = new Request(`https://us-central1-tribalkenya-ff470.cloudfunctions.net/app/api/categories/add/${email}`, options);
       await fetch(request);
-      alertMessage('succes');
+      alertMessage('success');
     } catch (error) {
       alertMessage('error', error.message);
     }

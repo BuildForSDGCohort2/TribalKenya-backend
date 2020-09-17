@@ -59,6 +59,7 @@ app.get("/api/categories", async (req, res) => {
     return res.status(500).send(error.message);
   }
 })
+
 // Get a single category
 app.get("/api/categories/:id", async (req, res) => {
   try {
@@ -69,6 +70,31 @@ app.get("/api/categories/:id", async (req, res) => {
       ...data
     }
     return res.status(200).send(result);
+  } catch (error) {
+    return res.status(500).send(error.message);
+  }
+})
+
+// Delete a category
+app.delete("/api/category/delete/:id", async (req, res) => {
+  try {
+    const category = db.collection('categories').doc(req.params.id);
+    await category.delete();
+    return res.status(200);
+  } catch (error) {
+    return res.status(500).send(error.message);
+  }
+})
+
+// Update a category
+app.put("/api/category/update/:id", async(req, res) => {
+  try {
+    const category = db.collection('categories').doc(req.params.id);
+    category.update({
+      name: req.body.name,
+      poster: req.body.poster
+    });
+    return res.status(200);
   } catch (error) {
     return res.status(500).send(error.message);
   }
