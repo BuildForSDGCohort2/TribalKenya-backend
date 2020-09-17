@@ -61,6 +61,14 @@ const AuthProvider = ({ children }) => {
     }
   };
 
+  const alertMessage = (type, error = null) => {
+    if (type === 'success') {
+      dispatch({ type: 'message', message: 'Success', success: true });
+    } else {
+      dispatch({ type: 'message', message: error, success: false });
+    }
+  };
+
   // check if user is logged in
   useEffect(() => {
     firebaseAuth.onAuthStateChanged((user) => {
@@ -84,6 +92,7 @@ const AuthProvider = ({ children }) => {
         ...state,
         login,
         logOut,
+        alertMessage,
         dispatch
       }}>
           {children}

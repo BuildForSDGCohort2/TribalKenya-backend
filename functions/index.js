@@ -13,6 +13,7 @@ const app = express();
 app.use(cors({ origin: true }));
 const db = admin.firestore();
 
+// Add a category
 app.post("/api/categories/add/:email", async (req, res) => {
   try {
     if (!req.body.name || !req.body.poster) {
@@ -40,13 +41,49 @@ app.post("/api/categories/add/:email", async (req, res) => {
   }
 })
 
-app.get("/:userid/admin/add", async (req, res) => {
+// Get list of categories
+app.get("/api/categories", async (req, res) => {
   try {
-    const userId = req.params.userid;
-    await admin.auth().setCustomUserClaims(userId, {
-      admin: true,
-    });
-    return res.status(200).send("Admin created");
+    const categories = await db.collection('categories').get();
+    const results = [];
+    categories.forEach(key => {
+      const data = key.data();
+      const category = {
+        id: key.id,
+        ...data
+      }
+      results.push(category);
+    })
+    return res.status(200).send(results);
+  } catch (error) {
+    return res.status(500).send(error.message);
+  }
+})
+// Get a single category
+app.get("/api/categories/:id", async (req, res) => {
+  try {
+    const category = await db.collection('categories').doc(req.params.id).get();
+    const data = category.data();
+    const result = {
+      id: category.id,
+      ...data
+    }
+    return res.status(200).send(result);
+  } catch (error) {
+    return res.status(500).send(error.message);
+  }
+})
+
+app.get("/:userid/admin/add/:adminemail", async (req, res) => {
+  try {
+    const user = await admin.auth().getUserByEmail(req.params.adminemail);
+    if(user.customClaims && user.customClaims.admin === true) {
+      await admin.auth().setCustomUserClaims(req.params.userid, {
+        admin: true,
+      });
+      return res.status(200).send("Admin created");
+    }
+    return res.status(500).send('Access Denied');
   } catch (error) {
     console.error(error);
     return res.status(500);

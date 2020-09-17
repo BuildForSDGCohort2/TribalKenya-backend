@@ -6,7 +6,8 @@ export const HomeContext = createContext();
 
 // Create initial state
 const initialState = {
-  categoryForm: false
+  categoryForm: false,
+  categories: []
 };
 
 // Create reducer
@@ -17,6 +18,11 @@ const reducer = (state = initialState, action) => {
         ...state,
         categoryForm: action.categoryForm
       };
+    case 'fetch_categories':
+      return {
+        ...state,
+        categories: action.categories
+      };
     default:
       return state;
   }
@@ -24,7 +30,7 @@ const reducer = (state = initialState, action) => {
 
 // Create Provider for passing down states to child components
 const HomeProvider = ({ children }) => {
-  const { user } = useContext(AuthContext);
+  const { user, alertMessage } = useContext(AuthContext);
   // get the reducer and initial states
   const [state, dispatch] = useReducer(reducer, initialState);
 
@@ -42,9 +48,9 @@ const HomeProvider = ({ children }) => {
       // Create request
       const request = new Request(`https://us-central1-tribalkenya-ff470.cloudfunctions.net/app/api/categories/add/${email}`, options);
       await fetch(request);
-      console.log('Success');
+      alertMessage('succes');
     } catch (error) {
-      console.log(error.message);
+      alertMessage('error', error.message);
     }
   };
 
@@ -59,11 +65,23 @@ const HomeProvider = ({ children }) => {
     }
   };
 
+  // Function for getting the list of categories from the database
+  const getListOfCategories = async () => {
+    try {
+      const response = await fetch('https://us-central1-tribalkenya-ff470.cloudfunctions.net/app/api/categories/');
+      const results = await response.json();
+      dispatch({ type: 'fetch_categories', categories: results });
+    } catch (error) {
+      alertMessage('error', error.message);
+    }
+  };
+
   return (
       <HomeContext.Provider value={{
         ...state,
         addCategory,
         addImageToStorage,
+        getListOfCategories,
         dispatch
       }}>
           {children}
