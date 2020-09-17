@@ -10,7 +10,7 @@ import {
   Button
 } from 'reactstrap';
 
-const AddCategoriesForm = ({ categoryForm, addCategory, addImage }) => {
+const AddCategoriesForm = ({ categoryForm, addCategory, addImage, toggleForm }) => {
   const [name, setname] = useState('');
   const [poster, setposter] = useState();
   const setUpCategory = async (posterFile) => {
@@ -23,8 +23,11 @@ const AddCategoriesForm = ({ categoryForm, addCategory, addImage }) => {
   };
   const handleSubmit = (ev) => {
     ev.preventDefault();
-    setUpCategory(poster.files[0]);
-    ev.target.reset();
+    if (poster && name !== '') {
+      setUpCategory(poster.files[0]);
+      ev.target.reset();
+      toggleForm();
+    }
   };
   return (
     <Fade in={categoryForm} tag="h5" className="mt-3">
@@ -46,12 +49,11 @@ const AddCategoriesForm = ({ categoryForm, addCategory, addImage }) => {
               onChange={(ev) => setposter(ev.target)}
             />
             <FormText color="muted">
-              This is some placeholder block-level help text for the above
-              input. It&apos;s a bit lighter and easily wraps to a new line.
+              Choose a poster for this category
             </FormText>
           </Col>
         </FormGroup>
-        <Button type="submit" className="black-bg no-outline">
+        <Button type="submit" className="black-bg no-outline" onClick={handleSubmit} >
           Submit
         </Button>
       </Form>
