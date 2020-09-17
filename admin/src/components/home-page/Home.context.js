@@ -40,7 +40,7 @@ const HomeProvider = ({ children }) => {
       const headers = new Headers();
       headers.append('Content-Type', 'application/json');
       const options = {
-        method: 'Post',
+        method: 'POST',
         headers,
         body: JSON.stringify(category)
       };
@@ -76,12 +76,55 @@ const HomeProvider = ({ children }) => {
     }
   };
 
+  // Function for updating a category
+  const updateCategory = async (category) => {
+    try {
+      const headers = new Headers();
+      headers.append('Content-Type', 'application/json');
+      const options = {
+        method: 'PUT',
+        headers,
+        body: JSON.stringify(category)
+      };
+      const request = new Request(`https://us-central1-tribalkenya-ff470.cloudfunctions.net/app/api/categories/update/${category.id}`, options);
+      await fetch(request);
+      alertMessage('success');
+    } catch (error) {
+      alertMessage('error', error.message);
+    }
+  };
+
+  // Function fo deleting a category
+  const deleteCategory = async (category) => {
+    try {
+      const newState = [...state.categories];
+      newState.forEach((key) => {
+        if (key.id === category.id) {
+          newState.splice(newState.indexOf(key), 1);
+        }
+      });
+      const headers = new Headers();
+      headers.append('Content-Type', 'application/json');
+      const options = {
+        method: 'DELETE',
+        headers
+      };
+      const request = new Request(`https://us-central1-tribalkenya-ff470.cloudfunctions.net/app/api/categories/delete/${category.id}`, options);
+      await fetch(request);
+      alertMessage('success');
+    } catch (error) {
+      alertMessage('error', error.message);
+    }
+  };
+
   return (
       <HomeContext.Provider value={{
         ...state,
         addCategory,
         addImageToStorage,
         getListOfCategories,
+        updateCategory,
+        deleteCategory,
         dispatch
       }}>
           {children}
