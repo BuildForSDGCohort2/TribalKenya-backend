@@ -1,3 +1,4 @@
+/* eslint-disable max-statements */
 import React, { useReducer, createContext, useContext } from 'react';
 import { storageRef } from '../firebase';
 import { AuthContext } from '../admin-login/Auth.context';
@@ -72,7 +73,7 @@ const HomeProvider = ({ children }) => {
       const results = await response.json();
       dispatch({ type: 'fetch_categories', categories: results });
     } catch (error) {
-      alertMessage('error', error.message);
+      console.log(error.message);
     }
   };
 
@@ -86,12 +87,23 @@ const HomeProvider = ({ children }) => {
         headers,
         body: JSON.stringify(category)
       };
-      const request = new Request(`https://us-central1-tribalkenya-ff470.cloudfunctions.net/app/api/categories/update/${category.id}`, options);
+      const request = new Request(`https://us-central1-tribalkenya-ff470.cloudfunctions.net/app/api/category/update/${category.id}`, options);
       await fetch(request);
       alertMessage('success');
     } catch (error) {
       alertMessage('error', error.message);
     }
+  };
+
+  // Function for updating a category in the state while waiting update response from API
+  const updateCategoryInState = (category) => {
+    const newState = [...state.categories];
+    newState.forEach((key) => {
+      if (key.id === category.id) {
+        newState.splice(newState.indexOf(key), 1, category);
+      }
+    });
+    dispatch({ type: 'fetch_categories', categories: newState });
   };
 
   // Function fo deleting a category
@@ -103,6 +115,7 @@ const HomeProvider = ({ children }) => {
           newState.splice(newState.indexOf(key), 1);
         }
       });
+      dispatch({ type: 'fetch_categories', categories: newState });
       const headers = new Headers();
       headers.append('Content-Type', 'application/json');
       const options = {
@@ -111,6 +124,7 @@ const HomeProvider = ({ children }) => {
       };
       const request = new Request(`https://us-central1-tribalkenya-ff470.cloudfunctions.net/app/api/categories/delete/${category.id}`, options);
       await fetch(request);
+      console.log(category.id);
       alertMessage('success');
     } catch (error) {
       alertMessage('error', error.message);
@@ -124,6 +138,7 @@ const HomeProvider = ({ children }) => {
         addImageToStorage,
         getListOfCategories,
         updateCategory,
+        updateCategoryInState,
         deleteCategory,
         dispatch
       }}>

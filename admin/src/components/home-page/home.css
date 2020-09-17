@@ -1,11 +1,14 @@
 .custom-card-group {
   display: flex !important;
+  align-items: center;
+  justify-content: center;
   flex-flow: wrap;
 }
 
 .custom-card {
   flex: 1 30%;
   height: 400px;
+  max-width: 300px;
   display: flex;
   flex-direction: column;
 }
