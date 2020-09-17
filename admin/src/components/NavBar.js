@@ -14,9 +14,9 @@ const NavBar = () => {
 
   return (
     <div>
-      <Navbar color="faded" light>
+      <Navbar color="faded" className="white-bg" light>
         <NavbarBrand href="/" className="mr-auto">TribalKenya</NavbarBrand>
-        <NavbarToggler onClick={toggleNavbar} className="mr-2" />
+        <NavbarToggler onClick={toggleNavbar} className="mr-2 no-outline" />
         <Collapse isOpen={!collapsed} navbar>
           <Nav navbar>
             <NavItem>

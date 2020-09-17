@@ -8,6 +8,7 @@
     "@firebase/app": "^0.6.11",
     "@firebase/auth": "^0.14.9",
     "@firebase/firestore": "^1.16.7",
+    "@firebase/storage": "^0.3.43",
     "animate.css": "^4.1.1",
     "bootstrap": "^4.5.2",
     "gatsby": "^2.24.54",

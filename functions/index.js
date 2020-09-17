@@ -13,20 +13,27 @@ const app = express();
 app.use(cors({ origin: true }));
 const db = admin.firestore();
 
-app.get("/test/get", async (req, res) => {
+app.post("/api/categories/add/:email", async (req, res) => {
   try {
-    const test = db.collection("test");
-    const getTest = await test.get();
-    const results = []; 
-    getTest.forEach((t) => {
-      const data = t.data();
-      const tObject = {
-        id: t.id,
-        ...data
+    if (!req.body.name || !req.body.poster) {
+      return res.status(500).send("No name and country in body");
+    }
+    const user = await admin.auth().getUserByEmail(req.params.email);
+    // Confirm user is admin
+    if(user.customClaims && user.customClaims.admin === true) {
+      const categories = db.collection('categories');
+      const category = {
+        name: req.body.name,
+        poster: req.body.poster,
       }
-      results.push(tObject);
-    })
-    return res.status(200).send(results);
+      const newCategory = await categories.add(category);
+      const results = {
+        id: newCategory.id,
+        ...category
+      }
+      return res.status(200).send(results);
+    }
+    return res.status(500).send('Access Denied');
   } catch (error) {
     console.error(error);
     return res.status(500);
