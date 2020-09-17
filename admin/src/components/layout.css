@@ -6,6 +6,12 @@ html {
   overflow-y: scroll;
 }
 
+:root {
+  --white-bg: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  --white: #f5f7fa;
+  --black: linear-gradient(to right, #434343 0%, black 100%);
+}
+
 body {
   margin: 0;
   -webkit-font-smoothing: antialiased;
@@ -19,12 +25,17 @@ body {
   -ms-font-feature-settings: "kern", "liga", "clig", "calt";
   -webkit-font-feature-settings: "kern", "liga", "clig", "calt";
   font-feature-settings: "kern", "liga", "clig", "calt";
+  background: black;
+  background-image: var(--black);
 }
 
-:root {
-  --white-bg: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-  --white: #f5f7fa;
-  --black: linear-gradient(to right, #434343 0%, black 100%);
+.no-outline,
+button {
+  outline: none !important;
+}
+
+.curved-border {
+  border-radius: 10px;
 }
 
 /* Colors and Backgrounds */

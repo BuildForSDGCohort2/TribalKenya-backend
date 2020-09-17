@@ -7,9 +7,7 @@ export default function Alert() {
   useEffect(() => {
     if (message.length > 0) {
       animateCSS('.alert', 'bounceInDown');
-      setTimeout(() => {
-        animateCSS('.alert', 'bounceOutUp', () => dispatch({ type: 'message', message: '' }));
-      }, 3000);
+      setTimeout(() => dispatch({ type: 'message', message: '' }), 4000);
     }
   });
   return (
