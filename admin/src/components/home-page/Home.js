@@ -1,3 +1,4 @@
+/* eslint-disable react/display-name */
 import React, { useContext, useEffect } from 'react';
 import { Button } from 'reactstrap';
 import { HomeContext } from './Home.context';
@@ -5,7 +6,7 @@ import AddCategoriesForm from './AddCategoriesForm';
 import Category from './Category';
 import './home.css';
 
-const Home = () => {
+const Home = React.memo(() => {
   const { categoryForm, dispatch, categories, getListOfCategories } = useContext(HomeContext);
   const toggleForm = () => {
     dispatch({
@@ -36,6 +37,6 @@ const Home = () => {
     </div>
     </>
   );
-};
+});
 
 export default Home;

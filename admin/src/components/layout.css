@@ -100,6 +100,13 @@ pre tt:after {
   cursor: pointer;
   text-transform: lowercase;
 }
+
+.right {
+  display: flex;
+  justify-content: flex-end;
+  width: 100%;
+}
+
 @media only screen and (max-width: 480px) {
   html {
     font-size: 100%;
