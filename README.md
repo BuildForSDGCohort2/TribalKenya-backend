@@ -14,3 +14,10 @@ This Admin section is for allowing the app maintainer to remove or upload items 
 
 <img width="1278" alt="backend" src="https://user-images.githubusercontent.com/60689731/93763279-d2d86380-fc19-11ea-9834-924dbf24e80b.png">
 
+## Authors
+
+Abdulwadud Mahamad - [art-abdulwadud](https://github.com/art-abdulwadud) - Full Stack Web Developer
+
+## License
+
+MIT
