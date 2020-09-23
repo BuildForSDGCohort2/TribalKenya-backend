@@ -1,6 +1,6 @@
 import React, { createContext, useReducer, useEffect } from 'react';
 import { navigate } from '@reach/router';
-import { firebaseAuth } from '../firebase';
+import firebase from 'gatsby-plugin-firebase';
 
 export const AuthContext = createContext();
 
@@ -44,8 +44,9 @@ const AuthProvider = ({ children }) => {
   // Create Login function
   const login = async (email, password) => {
     try {
-      await firebaseAuth.signInWithEmailAndPassword(email, password);
+      await firebase.auth().signInWithEmailAndPassword(email, password);
       dispatch({ type: 'message', message: 'Access Granted', success: true });
+      navigate('home');
     } catch (error) {
       dispatch({ type: 'message', message: 'Access Denied', success: false });
     }
@@ -53,7 +54,7 @@ const AuthProvider = ({ children }) => {
 
   const logOut = async () => {
     try {
-      await firebaseAuth.signOut();
+      await firebase.auth().signOut();
       dispatch({ type: 'addUser', user: {} });
       navigate('/');
     } catch (error) {
@@ -71,12 +72,11 @@ const AuthProvider = ({ children }) => {
 
   // check if user is logged in
   useEffect(() => {
-    firebaseAuth.onAuthStateChanged((user) => {
+    firebase.auth().onAuthStateChanged((user) => {
       if (user) {
         user.getIdTokenResult().then((idToken) => {
           if (idToken.claims.admin === true) {
             dispatch({ type: 'addUser', user: { id: user.uid, email: user.email } });
-            navigate('home');
           } else {
             logOut();
             dispatch({ type: 'message', message: 'Access Denied', success: false });

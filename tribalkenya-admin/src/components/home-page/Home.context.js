@@ -1,6 +1,6 @@
 /* eslint-disable max-statements */
 import React, { useReducer, createContext, useContext } from 'react';
-import { storageRef } from '../firebase';
+import firebase from 'gatsby-plugin-firebase';
 import { AuthContext } from '../admin-login/Auth.context';
 
 export const HomeContext = createContext();
@@ -47,7 +47,7 @@ const HomeProvider = ({ children }) => {
       };
       const email = await user.email;
       // Create request
-      const request = new Request(`https://us-central1-tribalkenya-ff470.cloudfunctions.net/app/api/categories/add/${email}`, options);
+      const request = new Request(`https://us-central1-tribalkenya-ff470.cloudfunctions.net/categories/category/add/${email}`, options);
       await fetch(request);
       alertMessage('success');
     } catch (error) {
@@ -57,6 +57,7 @@ const HomeProvider = ({ children }) => {
 
   const addImageToStorage = async (folder, image) => {
     try {
+      const storageRef = firebase.storage().ref();
       const addImage = storageRef.child(`${folder}/${image.name}`);
       await addImage.put(image, { contentType: image.type });
       const imageUrl = await addImage.getDownloadURL();
@@ -69,7 +70,7 @@ const HomeProvider = ({ children }) => {
   // Function for getting the list of categories from the database
   const getListOfCategories = async () => {
     try {
-      const response = await fetch('https://us-central1-tribalkenya-ff470.cloudfunctions.net/app/api/categories/');
+      const response = await fetch('https://us-central1-tribalkenya-ff470.cloudfunctions.net/categories/');
       const results = await response.json();
       dispatch({ type: 'fetch_categories', categories: results });
     } catch (error) {
@@ -87,7 +88,7 @@ const HomeProvider = ({ children }) => {
         headers,
         body: JSON.stringify(category)
       };
-      const request = new Request(`https://us-central1-tribalkenya-ff470.cloudfunctions.net/app/api/category/update/${category.id}`, options);
+      const request = new Request(`https://us-central1-tribalkenya-ff470.cloudfunctions.net/categories/category/update/${category.id}`, options);
       await fetch(request);
       alertMessage('success');
     } catch (error) {
@@ -122,7 +123,7 @@ const HomeProvider = ({ children }) => {
         method: 'DELETE',
         headers
       };
-      const request = new Request(`https://us-central1-tribalkenya-ff470.cloudfunctions.net/app/api/categories/delete/${category.id}`, options);
+      const request = new Request(`https://us-central1-tribalkenya-ff470.cloudfunctions.net/categories/category/delete/${category.id}`, options);
       await fetch(request);
       console.log(category.id);
       alertMessage('success');

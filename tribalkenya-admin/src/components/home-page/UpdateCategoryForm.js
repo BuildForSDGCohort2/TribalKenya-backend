@@ -73,9 +73,12 @@ const UpdateCategoryForm = ({ category, close }) => {
             <FormText color="muted">Choose a poster for this category</FormText>
           </Col>
         </FormGroup>
-        <Button type="submit" outline color="info">
-          Update
-        </Button>
+        <div className="right">
+          <Button type="submit" outline color="info" className="mr-2">
+            Update
+          </Button>
+          <Button color="secondary" onClick={() => close()}>Cancel</Button>
+        </div>
       </Form>
   );
 };

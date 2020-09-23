@@ -13,8 +13,8 @@ const HomePage = () => (
     <Alert />
     <HomeProvider>
       <div className="p-1">
-    <Home />
-    </div>
+        <Home />
+      </div>
     </HomeProvider>
   </Layout>
 );
