@@ -70,6 +70,18 @@ const AuthProvider = ({ children }) => {
     }
   };
 
+  const addImageToStorage = async (folder, image) => {
+    try {
+      const storageRef = firebase.storage().ref();
+      const addImage = storageRef.child(`${folder}/${image.name}`);
+      await addImage.put(image, { contentType: image.type });
+      const imageUrl = await addImage.getDownloadURL();
+      return imageUrl;
+    } catch (error) {
+      return error.message;
+    }
+  };
+
   // check if user is logged in
   useEffect(() => {
     firebase.auth().onAuthStateChanged((user) => {
@@ -93,7 +105,8 @@ const AuthProvider = ({ children }) => {
         login,
         logOut,
         alertMessage,
-        dispatch
+        dispatch,
+        addImageToStorage
       }}>
           {children}
       </AuthContext.Provider>

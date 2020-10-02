@@ -1,5 +1,4 @@
 import React, { useReducer, createContext, useContext } from 'react';
-import firebase from 'gatsby-plugin-firebase';
 import { AuthContext } from '../admin-login/Auth.context';
 
 export const HomeContext = createContext();
@@ -61,18 +60,6 @@ const HomeProvider = ({ children }) => {
       alertMessage('success');
     } catch (error) {
       alertMessage('error', error.message);
-    }
-  };
-
-  const addImageToStorage = async (folder, image) => {
-    try {
-      const storageRef = firebase.storage().ref();
-      const addImage = storageRef.child(`${folder}/${image.name}`);
-      await addImage.put(image, { contentType: image.type });
-      const imageUrl = await addImage.getDownloadURL();
-      return imageUrl;
-    } catch (error) {
-      return error.message;
     }
   };
 
@@ -138,7 +125,6 @@ const HomeProvider = ({ children }) => {
       <HomeContext.Provider value={{
         ...state,
         addCategory,
-        addImageToStorage,
         getListOfCategories,
         updateCategory,
         updateCategoryInState,
