@@ -6,7 +6,7 @@ const categories = express();
 categories.use(cors({ origin: true }));
 
 // Add a category
-categories.post("/category/add/:email", async (req, res) => {
+categories.post("/category/add", async (req, res) => {
   try {
     if (!req.body.name || !req.body.poster) {
       return res.status(500).send("No name and country in body");
