@@ -8,21 +8,25 @@ places.use(cors({ origin: true }));
 // Add place/site to a category
 places.post('/place/add', async (req, res) => {
   try {
-    if (!req.body.name || !req.body.description || !req.body.poster || !req.body.geo || !req.body.categoryId) {
-      return req.status(500).send('Missing body');
+    if (!req.body.name || !req.body.description || !req.body.poster || !req.body.geo || !req.body.category_id || !req.body.images) {
+      return res.status(500).send('Missing body');
     }
-    const places = db.collection('categories').doc(req.body.categoryId).collection('places');
+    const places = db.collection('categories').doc(req.body.category_id).collection('places');
+    let instagram, facebook, phone = '';
+    req.body.instagram ? instagram = req.body.instagram : instagram = '';
+    req.body.facebook ? facebook = req.body.facebook : facebook = '';
+    req.body.phone ? phone = req.body.phone : phone = '';
     const placeObj = {
-      categoryId: req.body.categoryId,
+      category_id: req.body.category_id,
       name: req.body.name,
       description: req.body.description,
       poster: req.body.poster,
       geo: req.body.geo,
-      images: db.collection('images').doc(categoryId),
+      images: [...req.body.images],
       location: req.body.location,
-      phone: req.body.phone,
-      facebook: req.body.facebook,
-      instagram: req.body.instagram
+      phone: phone,
+      facebook: facebook,
+      instagram: instagram
     }
     const newPlace = await places.add(placeObj);
     const results = {
@@ -31,6 +35,8 @@ places.post('/place/add', async (req, res) => {
     }
     return res.status(200).send(results);
   } catch (error) {
-    return res.status(200).send(error.message);
+    return res.status(500).send(error.message);
   }
 })
+
+module.exports = places;
