@@ -39,4 +39,23 @@ places.post('/place/add', async (req, res) => {
   }
 })
 
+// Get places/sites in a category
+places.get('/', async (req, res) => {
+  try {
+    const places = await db.collection('categories').doc(req.body.category_id).collection('places').get();
+    let results = [];
+    places.forEach((place) => {
+      const data = place.data();
+      const getPlace = {
+        id: place.id,
+        ...data
+      }
+      results.push(getPlace);
+    })
+    return res.status(200).send(results);
+  } catch (error) {
+    return res.status(500).send(error.message);
+  }
+})
+
 module.exports = places;
