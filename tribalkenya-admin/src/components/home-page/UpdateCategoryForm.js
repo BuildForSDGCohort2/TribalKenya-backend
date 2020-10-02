@@ -22,16 +22,20 @@ const UpdateCategoryForm = ({ category, close }) => {
   } = useContext(HomeContext);
   const setUpCategory = async (posterFile) => {
     try {
-      if (posterFile === category.poster) {
-        const updatedCategory = { id: category.id, name: name, poster: category.poster };
-        updateCategoryInState(updatedCategory);
-        await updateCategory(updatedCategory);
-      } else {
-        const posterUrl = await addImageToStorage('categories', posterFile);
-        const updatedCategory = { id: category.id, name: name, poster: posterUrl };
-        updateCategoryInState(updatedCategory);
-        await updateCategory(updatedCategory);
-      }
+      const updatedCategory = { id: category.id, name: name, poster: posterFile };
+      updateCategoryInState(updatedCategory);
+      await updateCategory(updatedCategory);
+      await getListOfCategories();
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+  const addNewDetails = async (newName, newPoster) => {
+    try {
+      const posterUrl = await addImageToStorage('categories', newPoster);
+      const updatedCategory = { id: category.id, name: newName, poster: posterUrl };
+      updateCategoryInState(updatedCategory);
+      await updateCategory(updatedCategory);
       await getListOfCategories();
     } catch (error) {
       console.log(error.message);
@@ -39,8 +43,10 @@ const UpdateCategoryForm = ({ category, close }) => {
   };
   const handleSubmit = (ev) => {
     ev.preventDefault();
-    if (poster) {
-      setUpCategory(poster.files[0]);
+    if (poster && name !== '') {
+      addNewDetails(name, poster.files[0]);
+    } else if (poster && name === '') {
+      addNewDetails(category.name, poster.files[0]);
     } else {
       setUpCategory(category.poster);
     }

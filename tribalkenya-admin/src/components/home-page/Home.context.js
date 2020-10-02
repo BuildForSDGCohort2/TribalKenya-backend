@@ -35,6 +35,17 @@ const HomeProvider = ({ children }) => {
   // get the reducer and initial states
   const [state, dispatch] = useReducer(reducer, initialState);
 
+  // Function for getting the list of categories from the database
+  const getListOfCategories = async () => {
+    try {
+      const response = await fetch('https://us-central1-tribalkenya-ff470.cloudfunctions.net/categories/');
+      const results = await response.json();
+      dispatch({ type: 'fetch_categories', categories: results });
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
   // Function for adding a new category to database
   const addCategory = async (category) => {
     try {
@@ -64,17 +75,6 @@ const HomeProvider = ({ children }) => {
       return imageUrl;
     } catch (error) {
       return error.message;
-    }
-  };
-
-  // Function for getting the list of categories from the database
-  const getListOfCategories = async () => {
-    try {
-      const response = await fetch('https://us-central1-tribalkenya-ff470.cloudfunctions.net/categories/');
-      const results = await response.json();
-      dispatch({ type: 'fetch_categories', categories: results });
-    } catch (error) {
-      console.log(error.message);
     }
   };
 

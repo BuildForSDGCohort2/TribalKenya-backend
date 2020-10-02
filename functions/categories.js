@@ -11,22 +11,17 @@ categories.post("/category/add/:email", async (req, res) => {
     if (!req.body.name || !req.body.poster) {
       return res.status(500).send("No name and country in body");
     }
-    const user = await admin.auth().getUserByEmail(req.params.email);
-    // Confirm user is admin
-    if(user.customClaims && user.customClaims.admin === true) {
-      const categories = db.collection('categories');
-      const category = {
-        name: req.body.name,
-        poster: req.body.poster,
-      }
-      const newCategory = await categories.add(category);
-      const results = {
-        id: newCategory.id,
-        ...category
-      }
-      return res.status(200).send(results);
+    const categories = db.collection('categories');
+    const category = {
+      name: req.body.name,
+      poster: req.body.poster,
     }
-    return res.status(500).send('Access Denied');
+    const newCategory = await categories.add(category);
+    const results = {
+      id: newCategory.id,
+      ...category
+    }
+    return res.status(200).send(results);
   } catch (error) {
     console.error(error);
     return res.status(500);
