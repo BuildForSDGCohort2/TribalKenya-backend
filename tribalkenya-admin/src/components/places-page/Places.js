@@ -5,7 +5,7 @@ import Place from './Place';
 import AddPlaceForm from './AddPlaceForm';
 
 const Places = ({ categoryId }) => {
-  const { getListOfPlaces, dispatch, placesForm, places } = useContext(PlacesContext);
+  const { getListOfPlaces, dispatch, placesForm, places, addPlace } = useContext(PlacesContext);
   const toggleForm = () => dispatch({ type: 'toggle_form', placesForm: !placesForm });
   useEffect(() => {
     getListOfPlaces(categoryId);
@@ -17,7 +17,7 @@ const Places = ({ categoryId }) => {
           <Button onClick={toggleForm}>
               {placesForm ? 'Cancel' : 'Add Place' }
           </Button>
-          {placesForm ? <AddPlaceForm placesForm={placesForm} categoryId={categoryId} /> : null}
+          {placesForm ? <AddPlaceForm placesForm={placesForm} categoryId={categoryId} addPlace={addPlace} close={toggleForm} getListOfPlaces={getListOfPlaces} /> : null}
         </div>
         <div className="container-fluid white-bg curved-border p-2 mt-2 custom-card-group">
             {places.map((key) => (

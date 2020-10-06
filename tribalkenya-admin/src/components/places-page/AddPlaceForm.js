@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+/* eslint-disable max-statements */
+import React, { useState, useContext } from 'react';
 import {
   Fade,
   Form,
@@ -9,17 +10,45 @@ import {
   FormText,
   Button
 } from 'reactstrap';
+import { AuthContext } from '../admin-login/Auth.context';
 
-const AddPlaceForm = ({ placesForm, categoryId }) => {
+const AddPlaceForm = ({ placesForm, categoryId, addPlace, close, getListOfPlaces }) => {
+  const { addImageToStorage } = useContext(AuthContext);
   const [name, setname] = useState('');
   const [des, setdes] = useState('');
   const [poster, setposter] = useState('');
   const [geolocation, setgeolocation] = useState('');
   const [location, setlocation] = useState('');
+  const [phone, setphone] = useState('');
+  const [facebook, setfacebook] = useState('');
+  const [instagram, setinstagram] = useState('');
+  const addDataToDB = async (posterImg, data) => {
+    try {
+      const posterUrl = await addImageToStorage('sites', posterImg);
+      await addPlace({
+        ...data,
+        poster: posterUrl
+      });
+      getListOfPlaces();
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
   const handleSubmit = (ev) => {
     ev.preventDefault();
     if (name !== '' && poster && des !== '') {
-      console.log(name, des, poster.files[0], categoryId, geolocation, location);
+      const data = {
+        name: name,
+        description: des,
+        category_id: categoryId,
+        geo: geolocation,
+        location: location,
+        phone: phone,
+        facebook: facebook,
+        instagram: instagram
+      };
+      addDataToDB(poster.files[0], data);
+      close();
     }
   };
   return (
@@ -57,6 +86,18 @@ const AddPlaceForm = ({ placesForm, categoryId }) => {
         <FormGroup>
           <Label for="location">Location</Label>
           <Input type="text" name="location" id="location" onChange={(ev) => setlocation(ev.target.value)} />
+        </FormGroup>
+        <FormGroup>
+          <Label for="phone">Phone</Label>
+          <Input type="phone" name="phone" id="phone" onChange={(ev) => setphone(ev.target.value)} />
+        </FormGroup>
+        <FormGroup>
+          <Label for="facebook">Facebook</Label>
+          <Input type="text" name="facebook" id="facebook" onChange={(ev) => setfacebook(ev.target.value)} />
+        </FormGroup>
+        <FormGroup>
+          <Label for="instagram">Instagram</Label>
+          <Input type="text" name="instagram" id="instagram" onChange={(ev) => setinstagram(ev.target.value)} />
         </FormGroup>
         <Button type="submit" className="black-bg no-outline" >
           Submit

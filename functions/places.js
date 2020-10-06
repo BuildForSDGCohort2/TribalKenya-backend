@@ -8,7 +8,7 @@ places.use(cors({ origin: true }));
 // Add place/site to a category
 places.post('/place/add', async (req, res) => {
   try {
-    if (!req.body.name || !req.body.description || !req.body.poster || !req.body.geo || !req.body.category_id || !req.body.images) {
+    if (!req.body.name || !req.body.description || !req.body.poster || !req.body.geo || !req.body.category_id) {
       return res.status(500).send('Missing body');
     }
     const places = db.collection('categories').doc(req.body.category_id).collection('places');
@@ -22,7 +22,7 @@ places.post('/place/add', async (req, res) => {
       description: req.body.description,
       poster: req.body.poster,
       geo: req.body.geo,
-      images: [...req.body.images],
+      images: [],
       location: req.body.location,
       phone: phone,
       facebook: facebook,
@@ -38,6 +38,19 @@ places.post('/place/add', async (req, res) => {
     return res.status(500).send(error.message);
   }
 })
+
+// Add images to images array
+places.put('/places/:category_id/:place_id', async (req, res) => {
+  try {
+    const places = db.collection('categories').doc(req.body.category_id).collection('places');
+    await places.doc(req.params.place_id).update({
+      images: [...req.body.images]
+    });
+    return res.status(200);
+  } catch (error) {
+    return res.status(500).send(error.message);
+  }
+} )
 
 // Get places/sites in a category
 places.get('/:category_id', async (req, res) => {

@@ -55,7 +55,7 @@ const PlacesProvider = ({ children }) => {
         body: JSON.stringify(place)
       };
       // Create request
-      const request = new Request('https://us-central1-tribalkenya-ff470.cloudfunctions.net/categories/place/add', options);
+      const request = new Request('https://us-central1-tribalkenya-ff470.cloudfunctions.net/places/place/add', options);
       await fetch(request);
       alertMessage('success');
     } catch (error) {
