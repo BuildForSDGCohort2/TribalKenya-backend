@@ -23,9 +23,6 @@ const NavBar = () => {
               <Link to="/home" className="navlink">Home</Link>
             </NavItem>
             <NavItem>
-              <Link to="/places" className="navlink">Places</Link>
-            </NavItem>
-            <NavItem>
               <NavLink href="" onClick={logout}>Logout</NavLink>
             </NavItem>
           </Nav>

@@ -40,9 +40,9 @@ places.post('/place/add', async (req, res) => {
 })
 
 // Get places/sites in a category
-places.get('/', async (req, res) => {
+places.get('/:category_id', async (req, res) => {
   try {
-    const places = await db.collection('categories').doc(req.body.category_id).collection('places').get();
+    const places = await db.collection('categories').doc(req.params.category_id).collection('places').get();
     let results = [];
     places.forEach((place) => {
       const data = place.data();

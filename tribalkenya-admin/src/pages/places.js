@@ -3,13 +3,19 @@ import Layout from '../components/layout';
 import SEO from '../components/seo';
 import NavBar from '../components/NavBar';
 import Alert from '../components/Alert';
+import PlacesProvider from '../components/places-page/Places.context';
+import Places from '../components/places-page/Places';
 
-const Sites = () => (
+const Sites = ({ location }) => (
   <Layout>
     <SEO title="Sites" />
     <NavBar />
     <Alert />
-    <h1>Places</h1>
+    <PlacesProvider>
+      <div className="p-1">
+        <Places categoryId={location.state.id} />
+      </div>
+    </PlacesProvider>
   </Layout>
 );
 

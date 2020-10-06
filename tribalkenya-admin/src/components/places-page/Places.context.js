@@ -1,7 +1,7 @@
 import React, { useReducer, createContext, useContext } from 'react';
 import { AuthContext } from '../admin-login/Auth.context';
 
-const PlacesContext = createContext();
+export const PlacesContext = createContext();
 
 // Create initial state
 const initialState = {
@@ -12,7 +12,7 @@ const initialState = {
 // Reducer
 const reducer = (state = initialState, action) => {
   switch (action.type) {
-    case 'activate_form':
+    case 'toggle_form':
       return {
         ...state,
         placesForm: action.placesForm
@@ -34,9 +34,9 @@ const PlacesProvider = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
 
   // Function for getting the list of places in a category
-  const getListOfPlaces = async () => {
+  const getListOfPlaces = async (categoryId) => {
     try {
-      const response = await fetch('https://us-central1-tribalkenya-ff470.cloudfunctions.net/places/');
+      const response = await fetch(`https://us-central1-tribalkenya-ff470.cloudfunctions.net/places/${categoryId}`);
       const results = await response.json();
       dispatch({ type: 'fetch_places', places: results });
     } catch (error) {
@@ -67,7 +67,8 @@ const PlacesProvider = ({ children }) => {
       <PlacesContext.Provider value={{
         ...state,
         getListOfPlaces,
-        addPlace
+        addPlace,
+        dispatch
       }}>
           {children}
       </PlacesContext.Provider>
