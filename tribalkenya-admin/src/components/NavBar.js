@@ -18,9 +18,9 @@ const NavBar = () => {
         <NavbarBrand href="/" className="mr-auto">TribalKenya</NavbarBrand>
         <NavbarToggler onClick={toggleNavbar} className="mr-2 no-outline" />
         <Collapse isOpen={!collapsed} navbar>
-          <Nav navbar>
+          <Nav navbar className="text-center">
             <NavItem>
-              <Link to="home" className="navlink">Home</Link>
+              <Link to="/home" className="navlink">Home</Link>
             </NavItem>
             <NavItem>
               <NavLink href="" onClick={logout}>Logout</NavLink>

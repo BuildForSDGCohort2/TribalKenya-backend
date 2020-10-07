@@ -3,6 +3,7 @@ import {
   Card, CardImg, CardBody,
   CardTitle, CardSubtitle, Button
 } from 'reactstrap';
+import { navigate } from '@reach/router';
 import { HomeContext } from './Home.context';
 import UpdateCategory from './UpdateCategory';
 
@@ -11,6 +12,9 @@ const Category = ({ category }) => {
   const [modal, setModal] = useState(false);
   const close = () => setModal(false);
   const toggle = (categoryId) => categoryId === category.id ? setModal(!modal) : close();
+  const goToCategory = (categoryId) => {
+    navigate('/places', { state: { id: categoryId } });
+  };
   return (
     <>
     <div className="mt-2 custom-card">
@@ -21,6 +25,7 @@ const Category = ({ category }) => {
             <CardSubtitle className="tag">#{category.name}</CardSubtitle>
             <Button outline color="info" className="mr-2" onClick={() => toggle(category.id)}>Edit</Button>
             <Button outline color="danger" onClick={() => deleteCategory(category)}>Delete</Button>
+            <Button outline color="primary" className="ml-2" onClick={() => goToCategory(category.id)}>Sites</Button>
           </CardBody>
         </Card>
     </div>

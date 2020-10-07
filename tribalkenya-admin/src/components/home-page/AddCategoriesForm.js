@@ -10,11 +10,13 @@ import {
   Button
 } from 'reactstrap';
 import { HomeContext } from './Home.context';
+import { AuthContext } from '../admin-login/Auth.context';
 
 const AddCategoriesForm = () => {
   const [name, setname] = useState('');
   const [poster, setposter] = useState();
-  const { addCategory, dispatch, addImageToStorage, categoryForm, getListOfCategories } = useContext(HomeContext);
+  const { addCategory, dispatch, categoryForm, getListOfCategories } = useContext(HomeContext);
+  const { addImageToStorage } = useContext(AuthContext);
   const setUpCategory = async (posterFile) => {
     try {
       const posterUrl = await addImageToStorage('categories', posterFile);

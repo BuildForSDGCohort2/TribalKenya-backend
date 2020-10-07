@@ -70,6 +70,22 @@ const AuthProvider = ({ children }) => {
     }
   };
 
+  const addImageToStorage = async (folder, image) => {
+    try {
+      const storageRef = firebase.storage().ref();
+      const addImage = storageRef.child(`${folder}/${image.name}`);
+      await addImage.put(image, { contentType: image.type });
+      const imageUrl = await addImage.getDownloadURL();
+      return imageUrl;
+    } catch (error) {
+      return error.message;
+    }
+  };
+
+  // Sort list by date posted
+  // eslint-disable-next-line id-length
+  const sortDescending = (arr) => arr.sort((a, b) => new Date(b.datePosted) - new Date(a.datePosted));
+
   // check if user is logged in
   useEffect(() => {
     firebase.auth().onAuthStateChanged((user) => {
@@ -93,7 +109,9 @@ const AuthProvider = ({ children }) => {
         login,
         logOut,
         alertMessage,
-        dispatch
+        dispatch,
+        addImageToStorage,
+        sortDescending
       }}>
           {children}
       </AuthContext.Provider>

@@ -1,6 +1,4 @@
-/* eslint-disable max-statements */
 import React, { useReducer, createContext, useContext } from 'react';
-import firebase from 'gatsby-plugin-firebase';
 import { AuthContext } from '../admin-login/Auth.context';
 
 export const HomeContext = createContext();
@@ -31,9 +29,20 @@ const reducer = (state = initialState, action) => {
 
 // Create Provider for passing down states to child components
 const HomeProvider = ({ children }) => {
-  const { user, alertMessage } = useContext(AuthContext);
+  const { alertMessage } = useContext(AuthContext);
   // get the reducer and initial states
   const [state, dispatch] = useReducer(reducer, initialState);
+
+  // Function for getting the list of categories from the database
+  const getListOfCategories = async () => {
+    try {
+      const response = await fetch('https://us-central1-tribalkenya-ff470.cloudfunctions.net/categories/');
+      const results = await response.json();
+      dispatch({ type: 'fetch_categories', categories: results });
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
 
   // Function for adding a new category to database
   const addCategory = async (category) => {
@@ -45,36 +54,12 @@ const HomeProvider = ({ children }) => {
         headers,
         body: JSON.stringify(category)
       };
-      const email = await user.email;
       // Create request
-      const request = new Request(`https://us-central1-tribalkenya-ff470.cloudfunctions.net/categories/category/add/${email}`, options);
+      const request = new Request('https://us-central1-tribalkenya-ff470.cloudfunctions.net/categories/category/add', options);
       await fetch(request);
       alertMessage('success');
     } catch (error) {
       alertMessage('error', error.message);
-    }
-  };
-
-  const addImageToStorage = async (folder, image) => {
-    try {
-      const storageRef = firebase.storage().ref();
-      const addImage = storageRef.child(`${folder}/${image.name}`);
-      await addImage.put(image, { contentType: image.type });
-      const imageUrl = await addImage.getDownloadURL();
-      return imageUrl;
-    } catch (error) {
-      return error.message;
-    }
-  };
-
-  // Function for getting the list of categories from the database
-  const getListOfCategories = async () => {
-    try {
-      const response = await fetch('https://us-central1-tribalkenya-ff470.cloudfunctions.net/categories/');
-      const results = await response.json();
-      dispatch({ type: 'fetch_categories', categories: results });
-    } catch (error) {
-      console.log(error.message);
     }
   };
 
@@ -107,16 +92,21 @@ const HomeProvider = ({ children }) => {
     dispatch({ type: 'fetch_categories', categories: newState });
   };
 
+  // Delete from state
+  const deleteFromState = (category) => {
+    const newState = [...state.categories];
+    newState.forEach((key) => {
+      if (key.id === category.id) {
+        newState.splice(newState.indexOf(key), 1);
+      }
+    });
+    dispatch({ type: 'fetch_categories', categories: newState });
+  };
+
   // Function fo deleting a category
   const deleteCategory = async (category) => {
     try {
-      const newState = [...state.categories];
-      newState.forEach((key) => {
-        if (key.id === category.id) {
-          newState.splice(newState.indexOf(key), 1);
-        }
-      });
-      dispatch({ type: 'fetch_categories', categories: newState });
+      deleteFromState(category);
       const headers = new Headers();
       headers.append('Content-Type', 'application/json');
       const options = {
@@ -125,7 +115,6 @@ const HomeProvider = ({ children }) => {
       };
       const request = new Request(`https://us-central1-tribalkenya-ff470.cloudfunctions.net/categories/category/delete/${category.id}`, options);
       await fetch(request);
-      console.log(category.id);
       alertMessage('success');
     } catch (error) {
       alertMessage('error', error.message);
@@ -136,7 +125,6 @@ const HomeProvider = ({ children }) => {
       <HomeContext.Provider value={{
         ...state,
         addCategory,
-        addImageToStorage,
         getListOfCategories,
         updateCategory,
         updateCategoryInState,

@@ -28,15 +28,17 @@ auth.get("/:userid/admin/add/:adminemail", async (req, res) => {
 // Create new user
 auth.post("/signup", async (req, res) => {
     try {
-        await admin.auth().createUser({
+        const userData = {
+            id: req.body.id,
             email: req.body.email,
-            displayName: req.body.username,
+            username: req.body.username,
             phoneNumber: req.body.phone,
-            photoURL: req.body.profile_pic,
-            password: req.body.password
-        });
+            photoURL: req.body.profile_pic
+        }
+        await db.collection('profile').doc(userData.id).set(userData);
         return res.status(200).send('Signed up');
     } catch (error) {
+        console.log(error);
         return res.status(500).send(error.message);
     }
 })
