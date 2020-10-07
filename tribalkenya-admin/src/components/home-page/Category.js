@@ -12,8 +12,8 @@ const Category = ({ category }) => {
   const [modal, setModal] = useState(false);
   const close = () => setModal(false);
   const toggle = (categoryId) => categoryId === category.id ? setModal(!modal) : close();
-  const goToCategory = (categoryId) => {
-    navigate('/places', { state: { id: categoryId } });
+  const goToCategory = () => {
+    navigate('/places', { state: { id: category.id, name: category.name } });
   };
   return (
     <>
@@ -25,7 +25,7 @@ const Category = ({ category }) => {
             <CardSubtitle className="tag">#{category.name}</CardSubtitle>
             <Button outline color="info" className="mr-2" onClick={() => toggle(category.id)}>Edit</Button>
             <Button outline color="danger" onClick={() => deleteCategory(category)}>Delete</Button>
-            <Button outline color="primary" className="ml-2" onClick={() => goToCategory(category.id)}>Sites</Button>
+            <Button outline color="primary" className="ml-2" onClick={() => goToCategory()}>Sites</Button>
           </CardBody>
         </Card>
     </div>

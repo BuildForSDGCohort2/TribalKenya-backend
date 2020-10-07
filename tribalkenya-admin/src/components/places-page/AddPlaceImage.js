@@ -3,16 +3,15 @@ import { FormGroup, Label, Col, Input, FormText, Button, Form, Fade } from 'reac
 import { PlacesContext } from './Places.context';
 import { AuthContext } from '../admin-login/Auth.context';
 
-const AddPlaceImage = ({ categoryId, placeId }) => {
+const AddPlaceImage = ({ categoryId, placeId, toggleForm }) => {
   const [poster, setposter] = useState('');
   const { updatePlace, getImagesForSite } = useContext(PlacesContext);
   const { addImageToStorage } = useContext(AuthContext);
   const updateDoc = async (posterImg) => {
     try {
       const currentImages = await getImagesForSite(categoryId, placeId);
-      const imageUrl = await addImageToStorage(`sites${new Date(Date.now())}`, posterImg);
-      console.log(imageUrl);
-      updatePlace({
+      const imageUrl = await addImageToStorage('sites', posterImg);
+      await updatePlace({
         images: [...currentImages, imageUrl]
       }, categoryId, placeId);
     } catch (error) {
@@ -22,6 +21,8 @@ const AddPlaceImage = ({ categoryId, placeId }) => {
   const handleSubmit = (ev) => {
     ev.preventDefault();
     updateDoc(poster.files[0]);
+    ev.target.reset();
+    toggleForm();
   };
   return (
     <div className="image-form m-1 p-2">

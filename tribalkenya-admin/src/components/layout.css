@@ -74,6 +74,11 @@ pre tt:after {
   font-size: 1.5em;
 }
 
+.heading {
+  font-size: 2em;
+  font-weight: bold;
+}
+
 /* Login Form */
 .form-container {
   width: 100%;

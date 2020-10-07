@@ -4,7 +4,7 @@ import { PlacesContext } from './Places.context';
 import Place from './Place';
 import AddPlaceForm from './AddPlaceForm';
 
-const Places = ({ categoryId }) => {
+const Places = ({ categoryId, categoryName }) => {
   const { getListOfPlaces, dispatch, placesForm, places } = useContext(PlacesContext);
   const toggleForm = () => dispatch({ type: 'toggle_form', placesForm: !placesForm });
   useEffect(() => {
@@ -14,7 +14,7 @@ const Places = ({ categoryId }) => {
   return (
       <>
         <div className="container-fluid white-bg p-2 curved-border">
-          <h1 className="medium-text">Places</h1>
+          <h1 className="medium-text">{categoryName}</h1>
           <Button onClick={toggleForm}>
               {placesForm ? 'Cancel' : 'Add Place' }
           </Button>
