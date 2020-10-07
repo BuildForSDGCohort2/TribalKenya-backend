@@ -84,7 +84,7 @@ const AuthProvider = ({ children }) => {
 
   // Sort list by date posted
   // eslint-disable-next-line id-length
-  const sortDescending = (arr) => arr.sort((a, b) => new Date(b.date) - new Date(a.date));
+  const sortDescending = (arr) => arr.sort((a, b) => new Date(b.datePosted) - new Date(a.datePosted));
 
   // check if user is logged in
   useEffect(() => {

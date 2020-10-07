@@ -27,7 +27,7 @@ places.post('/place/add', async (req, res) => {
       phone: phone,
       facebook: facebook,
       instagram: instagram,
-      datePosted: req.body.date
+      datePosted: req.body.datePosted
     }
     const newPlace = await places.add(placeObj);
     const results = {
@@ -44,7 +44,7 @@ places.post('/place/add', async (req, res) => {
 places.put('/update/:category_id/:place_id', async (req, res) => {
   try {
     if (!req.params.category_id && !req.params.place_id) {
-      return res.status(500).send('missing body');
+      return res.status(500).send('missing params');
     }
     const places = db.collection('categories').doc(req.params.category_id).collection('places');
     await places.doc(req.params.place_id).update(req.body);
@@ -68,6 +68,20 @@ places.get('/:category_id', async (req, res) => {
       results.push(getPlace);
     })
     return res.status(200).send(results);
+  } catch (error) {
+    return res.status(500).send(error.message);
+  }
+});
+
+// Delete site
+places.delete('/delete/:category_id/:place_id', async (req, res) => {
+  try {
+    if (!req.params.category_id && !req.params.place_id) {
+      return res.status(500).send('missing params');
+    }
+    const places = db.collection('categories').doc(req.params.category_id).collection('places');
+    await places.doc(req.params.place_id).delete();
+    return res.status(200);
   } catch (error) {
     return res.status(500).send(error.message);
   }

@@ -53,7 +53,7 @@ const AddPlaceForm = ({ categoryId, close }) => {
         phone: phone,
         facebook: facebook,
         instagram: instagram,
-        date: Date.now()
+        datePosted: Date.now()
       };
       addDataToDB(poster.files[0], data);
       close();

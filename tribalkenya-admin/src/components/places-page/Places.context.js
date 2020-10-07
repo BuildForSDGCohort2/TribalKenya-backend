@@ -104,6 +104,23 @@ const PlacesProvider = ({ children }) => {
     }
   };
 
+  // Delete site
+  const deleteSite = async (categoryId, placeId) => {
+    try {
+      const headers = new Headers();
+      headers.append('Content-Type', 'application/json');
+      const options = {
+        method: 'DELETE',
+        headers
+      };
+      const request = new Request(`https://us-central1-tribalkenya-ff470.cloudfunctions.net/places/delete/${categoryId}/${placeId}`, options);
+      await fetch(request);
+      alertMessage('successfully deleted');
+    } catch (error) {
+      alertMessage('error', error.message);
+    }
+  };
+
   return (
       <PlacesContext.Provider value={{
         ...state,
@@ -111,7 +128,8 @@ const PlacesProvider = ({ children }) => {
         addPlace,
         dispatch,
         updatePlace,
-        getImagesForSite
+        getImagesForSite,
+        deleteSite
       }}>
           {children}
       </PlacesContext.Provider>
