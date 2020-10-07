@@ -11,9 +11,11 @@ import {
   Button
 } from 'reactstrap';
 import { AuthContext } from '../admin-login/Auth.context';
+import { PlacesContext } from './Places.context';
 
-const AddPlaceForm = ({ placesForm, categoryId, addPlace, close, getListOfPlaces }) => {
-  const { addImageToStorage } = useContext(AuthContext);
+const AddPlaceForm = ({ categoryId, close }) => {
+  const { addImageToStorage, sortDescending } = useContext(AuthContext);
+  const { addPlace, dispatch, places, placesForm, getListOfPlaces } = useContext(PlacesContext);
   const [name, setname] = useState('');
   const [des, setdes] = useState('');
   const [poster, setposter] = useState('');
@@ -24,12 +26,17 @@ const AddPlaceForm = ({ placesForm, categoryId, addPlace, close, getListOfPlaces
   const [instagram, setinstagram] = useState('');
   const addDataToDB = async (posterImg, data) => {
     try {
+      const currentState = places;
+      currentState.push({ ...data, poster: posterImg, id: '' });
+      sortDescending(currentState);
+      dispatch({ type: 'fetch_places', places: currentState });
       const posterUrl = await addImageToStorage('sites', posterImg);
-      await addPlace({
+      const newPlace = {
         ...data,
         poster: posterUrl
-      });
-      getListOfPlaces();
+      };
+      await addPlace({ ...newPlace });
+      await getListOfPlaces(categoryId);
     } catch (error) {
       console.log(error.message);
     }
@@ -45,7 +52,8 @@ const AddPlaceForm = ({ placesForm, categoryId, addPlace, close, getListOfPlaces
         location: location,
         phone: phone,
         facebook: facebook,
-        instagram: instagram
+        instagram: instagram,
+        date: Date.now()
       };
       addDataToDB(poster.files[0], data);
       close();

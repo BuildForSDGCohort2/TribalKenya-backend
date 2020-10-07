@@ -26,7 +26,8 @@ places.post('/place/add', async (req, res) => {
       location: req.body.location,
       phone: phone,
       facebook: facebook,
-      instagram: instagram
+      instagram: instagram,
+      datePosted: req.body.date
     }
     const newPlace = await places.add(placeObj);
     const results = {
@@ -39,18 +40,19 @@ places.post('/place/add', async (req, res) => {
   }
 })
 
-// Add images to images array
-places.put('/places/:category_id/:place_id', async (req, res) => {
+// Update site
+places.put('/update/:category_id/:place_id', async (req, res) => {
   try {
-    const places = db.collection('categories').doc(req.body.category_id).collection('places');
-    await places.doc(req.params.place_id).update({
-      images: [...req.body.images]
-    });
+    if (!req.params.category_id && !req.params.place_id) {
+      return res.status(500).send('missing body');
+    }
+    const places = db.collection('categories').doc(req.params.category_id).collection('places');
+    await places.doc(req.params.place_id).update(req.body);
     return res.status(200);
   } catch (error) {
     return res.status(500).send(error.message);
   }
-} )
+})
 
 // Get places/sites in a category
 places.get('/:category_id', async (req, res) => {

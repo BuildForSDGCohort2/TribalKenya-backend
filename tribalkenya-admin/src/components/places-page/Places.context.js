@@ -1,4 +1,5 @@
 import React, { useReducer, createContext, useContext } from 'react';
+import firebase from 'gatsby-plugin-firebase';
 import { AuthContext } from '../admin-login/Auth.context';
 
 export const PlacesContext = createContext();
@@ -6,6 +7,7 @@ export const PlacesContext = createContext();
 // Create initial state
 const initialState = {
   placesForm: false,
+  imagesForm: false,
   places: []
 };
 
@@ -16,6 +18,11 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         placesForm: action.placesForm
+      };
+    case 'toggle_image_form':
+      return {
+        ...state,
+        imagesForm: action.imagesForm
       };
     case 'fetch_places':
       return {
@@ -29,7 +36,7 @@ const reducer = (state = initialState, action) => {
 
 // Create Provider for passing down states to child components
 const PlacesProvider = ({ children }) => {
-  const { alertMessage } = useContext(AuthContext);
+  const { alertMessage, sortDescending } = useContext(AuthContext);
   // get the reducer and initial states
   const [state, dispatch] = useReducer(reducer, initialState);
 
@@ -38,7 +45,9 @@ const PlacesProvider = ({ children }) => {
     try {
       const response = await fetch(`https://us-central1-tribalkenya-ff470.cloudfunctions.net/places/${categoryId}`);
       const results = await response.json();
+      sortDescending(results);
       dispatch({ type: 'fetch_places', places: results });
+      console.log(results);
     } catch (error) {
       console.log(error.message);
     }
@@ -63,12 +72,46 @@ const PlacesProvider = ({ children }) => {
     }
   };
 
+  // Update site
+  const updatePlace = async (data, categoryId, placeId) => {
+    try {
+      const headers = new Headers();
+      headers.append('Content-Type', 'application/json');
+      const options = {
+        method: 'PUT',
+        headers,
+        body: JSON.stringify(data)
+      };
+      const request = new Request(`https://us-central1-tribalkenya-ff470.cloudfunctions.net/places/update/${categoryId}/${placeId}`, options);
+      await fetch(request);
+      alertMessage('success');
+    } catch (error) {
+      alertMessage('error', error.message);
+    }
+  };
+
+  // Get all the images for one site/place
+  const getImagesForSite = async (categoryId, placeId) => {
+    try {
+      const place = await firebase.firestore().collection('categories').doc(categoryId).collection('places')
+        .doc(placeId)
+        .get();
+      alertMessage('success');
+      return place.data().images;
+    } catch (error) {
+      console.log(error.message);
+      return error.message;
+    }
+  };
+
   return (
       <PlacesContext.Provider value={{
         ...state,
         getListOfPlaces,
         addPlace,
-        dispatch
+        dispatch,
+        updatePlace,
+        getImagesForSite
       }}>
           {children}
       </PlacesContext.Provider>
