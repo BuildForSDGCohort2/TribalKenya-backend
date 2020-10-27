@@ -13,7 +13,7 @@ const Sites = ({ location }) => (
     <Alert />
     <PlacesProvider>
       <div className="p-1">
-        <Places categoryId={location.state.id} />
+        {location.state ? <Places categoryId={location.state.id} categoryName={location.state.name} /> : null}
       </div>
     </PlacesProvider>
   </Layout>

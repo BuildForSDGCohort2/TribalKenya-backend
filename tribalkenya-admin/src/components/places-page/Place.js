@@ -27,9 +27,16 @@ const Place = ({ place, categoryId }) => {
         <Card>
           <CardImg top width="300" height="400" src={place.poster} alt={`${place.name}`} />
           <CardBody className="custom-card-body">
-            <CardTitle>{place.name}</CardTitle>
-            <CardSubtitle className="small-text">{place.description}</CardSubtitle>
-            {imagesForm ? <AddPlaceImage categoryId={categoryId} placeId={place.id} /> : null}
+            <CardTitle className="heading">{place.name}</CardTitle>
+            {place.images ? (
+              <>
+                {place.images.map((key) => (
+                  <img src={key} height="200" width="200" key={key} />
+                ))}
+              </>
+            ) : null}
+            <CardSubtitle className="small-text mt-3">{place.description}</CardSubtitle>
+            {imagesForm ? <AddPlaceImage categoryId={categoryId} placeId={place.id} toggleForm={toggleForm} /> : null}
             <div className="mt-2">
               <Button outline color="info" className="mr-2" onClick={toggleForm}>
                 {imagesForm ? 'Cancel' : 'Add image'}

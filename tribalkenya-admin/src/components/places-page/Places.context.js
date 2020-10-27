@@ -47,7 +47,6 @@ const PlacesProvider = ({ children }) => {
       const results = await response.json();
       sortDescending(results);
       dispatch({ type: 'fetch_places', places: results });
-      console.log(results);
     } catch (error) {
       console.log(error.message);
     }
@@ -84,6 +83,7 @@ const PlacesProvider = ({ children }) => {
       };
       const request = new Request(`https://us-central1-tribalkenya-ff470.cloudfunctions.net/places/update/${categoryId}/${placeId}`, options);
       await fetch(request);
+      await getListOfPlaces(categoryId);
       alertMessage('success');
     } catch (error) {
       alertMessage('error', error.message);
