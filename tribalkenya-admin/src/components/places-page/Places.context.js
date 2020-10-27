@@ -46,7 +46,6 @@ const PlacesProvider = ({ children }) => {
       const response = await fetch(`https://us-central1-tribalkenya-ff470.cloudfunctions.net/places/${categoryId}`);
       const results = await response.json();
       sortDescending(results);
-      console.log(results);
       dispatch({ type: 'fetch_places', places: results });
     } catch (error) {
       console.log(error.message);

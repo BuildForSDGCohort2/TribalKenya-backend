@@ -28,7 +28,7 @@ const Place = ({ place, categoryId }) => {
           <CardImg top width="300" height="400" src={place.poster} alt={`${place.name}`} />
           <CardBody className="custom-card-body">
             <CardTitle className="heading">{place.name}</CardTitle>
-            {place.images.length > 0 ? (
+            {place.images ? (
               <>
                 {place.images.map((key) => (
                   <img src={key} height="200" width="200" key={key} />
