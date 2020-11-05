@@ -13,6 +13,7 @@ TribalKenya app basically is a platform where tourists can meet and chat with ot
 This Admin section is for allowing the app maintainer to remove or upload items to the database with privileged rights.
 
 <img width="1278" alt="backend" src="https://user-images.githubusercontent.com/60689731/93763279-d2d86380-fc19-11ea-9834-924dbf24e80b.png">
+<img width="974" alt="Screenshot 2020-11-05 at 18 08 51" src="https://user-images.githubusercontent.com/60689731/98258580-169ce780-1f92-11eb-8e52-7bc889cea34b.png">
 
 ## Author
 
