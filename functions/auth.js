@@ -87,7 +87,24 @@ auth.put('/profile-pic/update/:userid', async(req, res) => {
 // Update user profile details
 auth.put('/profile-details/update/:userid', async(req, res) => {
     try {
+        // update user profile
         await db.collection('profile').doc(req.params.userid).update(req.body);
+        // check if username has been updated
+        if(req.body.username) {
+            // update every trek posted by this user
+            const myTrek = await db.collection('treks').where("profileId", "==", req.params.userid).get();
+            let trekId;
+            await Promise.all(myTrek.forEach(async (key) => await db.collection('treks').doc(key.id).update({username: req.body.username})));
+            // update every like made by this user
+            // const myLikes = await db.collection('treks').where("likes", "array-contains", req.params.userid).get();
+            // let trekLikedId;
+            // myLikes.forEach(key => trekLikedId = key.id);
+            // await db.collection('treks').doc(trekLikedId).update();
+            // update every repost made by this user
+            // update every comment made by this user
+            // update every report made by this user
+        }
+        
         return res.status(200);
     } catch (error) {
         return res.status(500);
