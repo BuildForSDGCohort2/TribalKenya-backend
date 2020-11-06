@@ -43,7 +43,7 @@ const PlacesProvider = ({ children }) => {
   // Function for getting the list of places in a category
   const getListOfPlaces = async (categoryId) => {
     try {
-      const response = await fetch(`https://us-central1-tribalkenya-ff470.cloudfunctions.net/places/${categoryId}`);
+      const response = await fetch(`https://us-central1-tribalkenya-78cfa.cloudfunctions.net/places/${categoryId}`);
       const results = await response.json();
       sortDescending(results);
       dispatch({ type: 'fetch_places', places: results });
@@ -63,7 +63,7 @@ const PlacesProvider = ({ children }) => {
         body: JSON.stringify(place)
       };
       // Create request
-      const request = new Request('https://us-central1-tribalkenya-ff470.cloudfunctions.net/places/place/add', options);
+      const request = new Request('https://us-central1-tribalkenya-78cfa.cloudfunctions.net/places/place/add', options);
       await fetch(request);
       alertMessage('success');
     } catch (error) {
@@ -81,7 +81,7 @@ const PlacesProvider = ({ children }) => {
         headers,
         body: JSON.stringify(data)
       };
-      const request = new Request(`https://us-central1-tribalkenya-ff470.cloudfunctions.net/places/update/${categoryId}/${placeId}`, options);
+      const request = new Request(`https://us-central1-tribalkenya-78cfa.cloudfunctions.net/places/update/${categoryId}/${placeId}`, options);
       await fetch(request);
       await getListOfPlaces(categoryId);
       alertMessage('success');
@@ -113,7 +113,7 @@ const PlacesProvider = ({ children }) => {
         method: 'DELETE',
         headers
       };
-      const request = new Request(`https://us-central1-tribalkenya-ff470.cloudfunctions.net/places/delete/${categoryId}/${placeId}`, options);
+      const request = new Request(`https://us-central1-tribalkenya-78cfa.cloudfunctions.net/places/delete/${categoryId}/${placeId}`, options);
       await fetch(request);
       alertMessage('successfully deleted');
     } catch (error) {
