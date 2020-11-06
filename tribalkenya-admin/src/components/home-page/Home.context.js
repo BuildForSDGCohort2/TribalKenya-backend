@@ -36,7 +36,7 @@ const HomeProvider = ({ children }) => {
   // Function for getting the list of categories from the database
   const getListOfCategories = async () => {
     try {
-      const response = await fetch('https://us-central1-tribalkenya-ff470.cloudfunctions.net/categories/');
+      const response = await fetch('https://us-central1-tribalkenya-78cfa.cloudfunctions.net/categories/');
       const results = await response.json();
       dispatch({ type: 'fetch_categories', categories: results });
     } catch (error) {
@@ -55,7 +55,7 @@ const HomeProvider = ({ children }) => {
         body: JSON.stringify(category)
       };
       // Create request
-      const request = new Request('https://us-central1-tribalkenya-ff470.cloudfunctions.net/categories/category/add', options);
+      const request = new Request('https://us-central1-tribalkenya-78cfa.cloudfunctions.net/categories/category/add', options);
       await fetch(request);
       alertMessage('success');
     } catch (error) {
@@ -73,7 +73,7 @@ const HomeProvider = ({ children }) => {
         headers,
         body: JSON.stringify(category)
       };
-      const request = new Request(`https://us-central1-tribalkenya-ff470.cloudfunctions.net/categories/category/update/${category.id}`, options);
+      const request = new Request(`https://us-central1-tribalkenya-78cfa.cloudfunctions.net/categories/category/update/${category.id}`, options);
       await fetch(request);
       alertMessage('success');
     } catch (error) {
@@ -113,7 +113,7 @@ const HomeProvider = ({ children }) => {
         method: 'DELETE',
         headers
       };
-      const request = new Request(`https://us-central1-tribalkenya-ff470.cloudfunctions.net/categories/category/delete/${category.id}`, options);
+      const request = new Request(`https://us-central1-tribalkenya-78cfa.cloudfunctions.net/categories/category/delete/${category.id}`, options);
       await fetch(request);
       alertMessage('success');
     } catch (error) {
